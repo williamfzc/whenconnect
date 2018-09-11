@@ -1,37 +1,39 @@
 # whenac
 
-> when adb connected, init your android device.
+> when adb connected, manage your android device.
 
 ## design
 
-adb轮询以确认设备增减，若有变化：
-
-- 执行操作
-    - 自由配置，插件化
-    - 增减分别是不同的操作
-- 更新设备列表
-    - 设备列表直接在内存里，不需要文件io
+只保留最核心的部分，具体操作完全插件化
 
 ## modules
 
 - scanner
     - 轮询
-    - 不断向外输出当前有效设备列表
+    - 不断向sender输出当前有效设备列表
+
+- timer
+    - 定时任务模块（周期性而非定时性）
+    - 管理定时任务，在需要触发时向sender输出任务参数
+
+- sender（消息队列）
+    - 负责模块与core的通信
+    - 将队列中的内容通过API传递给core
 
 - core
     - 服务器形式
-    - 处理scanner返回的数据
-    - 通过方法库，调度操作流程
-    - 通过消息队列处理其他模块的请求
+    - 通过API接收其他模块的请求（sender、外界request）
+    - 结合plugin解析请求，做出响应
 
 - plugin
-    - 通过配置文件加载外部模块
-    - 方法库
+    - 方法库，一些自定义复杂操作的拓展
+    - 对应形式 方法名对应cmd命令`function_name: cmd`
 
-- timer
-    - 定时任务模块
-    - 管理定时任务，在需要触发时向外输出任务参数
+## problem
 
-## TODO
+- [x] scanner是否作为plugin与timer的一部分？
+    - 暂不作为，scanner频率较高，且作用不同于其他插件
 
-- scanner是否作为plugin与timer的一部分？
+- [ ]插件的形式只用cmd是否合理？
+
+- [ ]通信机制需要细化及检验
