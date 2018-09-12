@@ -31,12 +31,15 @@ when_connect(device='any', do=sth)
     - 轮询
     - 不断输出当前有效设备列表
 
-- queue
+- pipe
     - 负责scanner与core的通信
     - 后续扩展需要
 
 - core
     - 解析queue传递过来的请求，进行对应的处理
+    
+- api
+    - 外部调用
 
 ## License
 
