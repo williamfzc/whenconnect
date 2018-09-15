@@ -1,5 +1,6 @@
 import subprocess
 import warnings
+import os
 
 
 def parse_process_output_to_device_list(process_output: str) -> list:
@@ -9,7 +10,7 @@ def parse_process_output_to_device_list(process_output: str) -> list:
     :param process_output: output of subprocess, after decode
     :return: ['abcdef', 'ghijkl']
     """
-    device_list = [i.split('\t') for i in process_output.split('\r\n')[1:] if i]
+    device_list = [i.split('\t') for i in process_output.split(os.linesep)[1:] if i]
     available_device_list = []
     for each_device in device_list:
         if 'device' in each_device:
@@ -37,4 +38,5 @@ def get_device_list():
 
 
 if __name__ == '__main__':
-    get_device_list()
+    cur_device_list = get_device_list()
+    print(cur_device_list)

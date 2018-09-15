@@ -1,19 +1,20 @@
+"""
+- 外部调用API，进而启动core
+    - 确认core状态
+    - 传入参数，启动core
+    - 返回
+- core将初始化pipe初始化用于数据传递，并在子线程中启动scanner用于监听设备，并将三者互相绑定
+"""
+
 from collections import Iterable
+from whenconnect.core import api_handler
 
 
 def when_connect(device, do):
     if isinstance(device, str):
-        return _connect_any(do)
+        return api_handler('any', todo_list=do)
     if isinstance(device, Iterable):
-        return _connect_device(device, do)
-
-
-def _connect_any(todo_list):
-    return 'connect any, args: {}'.format(str(todo_list))
-
-
-def _connect_device(device_list, todo_list):
-    return 'connect device, args: {}, {}'.format(device_list, todo_list)
+        return api_handler('exactly', device_list=device, todo_list=do)
 
 
 __all__ = [
