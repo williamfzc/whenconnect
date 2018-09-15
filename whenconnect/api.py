@@ -7,14 +7,14 @@
 """
 
 from collections import Iterable
-from whenconnect.core import api_handler
+from whenconnect.core import register_task
 
 
 def when_connect(device, do):
     if isinstance(device, str):
-        return api_handler('any', todo_list=do)
+        return register_task('any', todo=do)
     if isinstance(device, Iterable):
-        return api_handler('exactly', device_list=device, todo_list=do)
+        return register_task('exactly', device_list=device, todo=do)
 
 
 __all__ = [
