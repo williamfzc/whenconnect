@@ -1,6 +1,8 @@
 import subprocess
 import warnings
 import os
+import time
+from whenconnect.pipe import event_queue
 
 
 def parse_process_output_to_device_list(process_output: str) -> list:
@@ -34,9 +36,22 @@ def get_device_list():
         warnings.warn('adb devices error: {}'.format(error_msg))
         raise subprocess.CalledProcessError(adb_result, adb_devices_cmd)
 
-    return parse_process_output_to_device_list(adb_stdout_content)
+    current_device_list = parse_process_output_to_device_list(adb_stdout_content)
+    return current_device_list
+
+
+def loop_get_device_list():
+    while True:
+        current_device_list = get_device_list()
+        event_queue.put(current_device_list)
+        time.sleep(1)
+
+
+# FOR TEST
+def _test():
+    current_device_list = get_device_list()
+    print(current_device_list)
 
 
 if __name__ == '__main__':
-    cur_device_list = get_device_list()
-    print(cur_device_list)
+    _test()
