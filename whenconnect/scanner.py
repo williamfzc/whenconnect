@@ -1,8 +1,6 @@
 import subprocess
 import warnings
 import os
-import time
-from whenconnect.pipe import event_queue
 
 
 def parse_process_output_to_device_list(process_output: str) -> list:
@@ -38,13 +36,6 @@ def get_device_list():
 
     current_device_list = parse_process_output_to_device_list(adb_stdout_content)
     return current_device_list
-
-
-def loop_get_device_list():
-    while True:
-        current_device_list = get_device_list()
-        event_queue.put(current_device_list)
-        time.sleep(1)
 
 
 # FOR TEST

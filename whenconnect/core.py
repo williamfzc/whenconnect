@@ -4,71 +4,31 @@
 # 维护queue
 # 维护scanner
 """
-import structlog
 import threading
+import time
 from whenconnect.pipe import event_queue
-from whenconnect.scanner import loop_get_device_list
+from whenconnect.scanner import get_device_list
+from whenconnect.manager import TaskManager
+from whenconnect.logger import logger
 
-logger = structlog.getLogger()
-
-# 事件注册
-
-# {
-#     device_id: [func1, func2],
-# }
-_EXACTLY_TASK_DICT = {}
-
-# any
-_ANY_TASK_LIST = []
+IS_ALIVE = 0
 
 
-def _register_any_task(todo=None):
-    if not todo:
-        return
-    global _ANY_TASK_LIST
-    _ANY_TASK_LIST.append(todo)
-    logger.info('RESISTER ANY', func_name=todo.__name__)
+def loop_get_device_list():
+    while IS_ALIVE:
+        current_device_list = get_device_list()
+        event_queue.put(current_device_list)
+        time.sleep(1)
 
 
-def _register_exactly_task(device_list=None, todo=None):
-    for each_device in device_list:
-        if each_device not in _EXACTLY_TASK_DICT:
-            _EXACTLY_TASK_DICT[each_device] = []
-        _EXACTLY_TASK_DICT[each_device].append(todo)
-        logger.info('RESISTER EXACTLY', func_name=todo.__name__, device=each_device)
-
-
-_operator_map = {
-    'any': _register_any_task,
-    'exactly': _register_exactly_task,
-}
-
-
-def register_task(operate_type, *args, **kwargs):
-    logger.info('START REGISTER', type=operate_type)
-    _operator_map[operate_type](*args, **kwargs)
-
-
-def exec_task(device_id):
-    # any func
-    func_list = _ANY_TASK_LIST
-    # exactly func
-    if device_id in _EXACTLY_TASK_DICT:
-        func_list += _EXACTLY_TASK_DICT[device_id]
-
-    for each_func in func_list:
-        logger.info('EXEC FUNC', func=each_func.__name__, device=device_id)
-        each_func(device_id)
-
-
-# device loop
-threading.Thread(target=loop_get_device_list).start()
-
-
-# queue handler
 def handle_event():
+    """
+    获取最新的设备列表，处理后让TaskManager执行对应的事件
+
+    :return:
+    """
     last_device_list = []
-    while True:
+    while IS_ALIVE:
         current_device_list = event_queue.get(timeout=2)
         # nothing different
         if last_device_list == current_device_list:
@@ -82,8 +42,27 @@ def handle_event():
         # more device
         logger.info('DEVICE ADDED', device=diff_device_list)
         for each_device in diff_device_list:
-            exec_task(each_device)
+            TaskManager.exec_task(each_device)
         last_device_list = current_device_list
 
 
-threading.Thread(target=handle_event).start()
+class ThreadManager(object):
+    logger.info('INIT WHENCONNECT')
+    loop_device_thread = threading.Thread(target=loop_get_device_list)
+    event_handler_thread = threading.Thread(target=handle_event)
+
+    @classmethod
+    def start(cls):
+        global IS_ALIVE
+        IS_ALIVE = 1
+        cls.loop_device_thread.start()
+        cls.event_handler_thread.start()
+
+    @classmethod
+    def stop(cls):
+        global IS_ALIVE
+        IS_ALIVE = 0
+
+
+def start_detect():
+    ThreadManager.start()

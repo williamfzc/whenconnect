@@ -7,16 +7,18 @@
 """
 
 from collections import Iterable
-from whenconnect.core import register_task
+from whenconnect.manager import TaskManager
+from whenconnect.core import start_detect
 
 
 def when_connect(device, do):
     if isinstance(device, str):
-        return register_task('any', todo=do)
+        return TaskManager.register_task('any', todo=do)
     if isinstance(device, Iterable):
-        return register_task('exactly', device_list=device, todo=do)
+        return TaskManager.register_task('exactly', device_list=device, todo=do)
 
 
 __all__ = [
     'when_connect',
+    'start_detect'
 ]
