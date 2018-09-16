@@ -1,45 +1,67 @@
 # whenconnect
 
-> once your android connected, do sth :)
+[![PyPI version](https://badge.fury.io/py/whenconnect.svg)](https://badge.fury.io/py/whenconnect)
 
-## design
 
-只保留最核心的部分，具体操作完全插件化
+> when your android connected, do sth :)
+
+## What For
+
+提供一个简洁方便的方案以解决设备连接上电脑时的初始化工作，例如安装应用、启动应用，或是定制任何你希望的。
+
+## Usage
+
+如果你希望，在设备123456F成功连接电脑后执行函数A，你只需要：
+
+```python
+from whenconnect import when_connect, start_detect
+
+
+def A(device):
+    print('call function A', device)
+
+
+# 开始监听
+start_detect()
+
+# 事件注册
+when_connect(device=['123456F'], do=A)
+```
+
+这样做之后，在你的程序执行时whenconnect将会同步检测123456F是否已经连接上，如果连接上，将把设备ID传入函数A并执行它：
+
+```bash
+call function A 123456F
+```
+
+当然，你也可以选择响应所有设备：
+
+```python
+when_connect(device='any', do=A)
+```
+
+这样做之后，一旦新增了android设备都会执行函数A。
+
+- 生命周期与你的程序保持一致
+- 如果你的程序结束了，监听也将不再进行
+
+如果你只是单纯希望它单独作为一个长期的监听模块存在，只需要让你的程序保持工作即可：
+
+- 在末尾加入死循环
+- 嵌入到服务器
+- `...`
 
 ## API
 
-```python
-from whenconnect import when_connect
+See `whenconnect/api.py` for detail.
 
-def sth(device):
-    print('do something 1', device)
-    
+## Install
 
-# set device list
-when_connect(device=['abc123', 'def456'], do=sth)
+Only tested on python3.
 
-# or command mode
-when_connect(device='any', do=sth) 
 ```
-
-- 一旦新连接上的设备符合要求，将依次执行do列表中的函数
-- 函数的第一个参数为当前操作的设备id
-
-## modules
-
-- scanner
-    - 轮询
-    - 不断输出当前有效设备列表
-
-- pipe
-    - 负责scanner与core的通信
-    - 后续扩展需要
-
-- core
-    - 解析queue传递过来的请求，进行对应的处理
-    
-- api
-    - 外部调用
+pip install whenconnect
+```
 
 ## License
 
