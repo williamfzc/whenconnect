@@ -6,6 +6,7 @@
 """
 import threading
 import time
+
 from whenconnect.pipe import event_queue
 from whenconnect.scanner import get_device_list
 from whenconnect.manager import TaskManager
@@ -29,7 +30,8 @@ def handle_event():
     """
     last_device_list = []
     while IS_ALIVE:
-        current_device_list = event_queue.get(timeout=2)
+        current_device_list = event_queue.get()
+        event_queue.task_done()
         # nothing different
         if last_device_list == current_device_list:
             continue
