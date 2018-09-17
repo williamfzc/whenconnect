@@ -54,13 +54,14 @@ class TaskManager(object):
     @classmethod
     def exec_task(cls, device_id):
         # any func
-        func_list = cls._any_task_list
-
+        func_list = cls._any_task_list.copy()
+        logger.info('ANY FUNC NEED EXEC', func_list=func_list)
         # exactly func
         if device_id in cls._exactly_task_dict:
+            logger.info('EXACTLY FUNC NEED EXEC', func_list=cls._exactly_task_dict[device_id])
             func_list |= cls._exactly_task_dict[device_id]
 
-        logger.info('FUNC NEED EXEC', func_list=[i.__name__ for i in func_list])
+        logger.info('ALL FUNC NEED EXEC', func_list=[i.__name__ for i in func_list])
         for each_func in func_list:
             logger.info('EXEC FUNC', func=each_func.__name__, device=device_id)
             each_func(device_id)
