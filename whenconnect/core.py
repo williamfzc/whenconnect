@@ -10,7 +10,7 @@ import time
 from whenconnect.pipe import event_queue
 from whenconnect.scanner import get_device_list
 from whenconnect.manager import TaskManager
-from whenconnect.logger import logger
+from whenconnect.logger import logger, no_output
 
 IS_ALIVE = 0
 
@@ -49,7 +49,6 @@ def handle_event():
 
 
 class ThreadManager(object):
-    logger.info('INIT WHENCONNECT')
     loop_device_thread = threading.Thread(target=loop_get_device_list)
     event_handler_thread = threading.Thread(target=handle_event)
 
@@ -66,5 +65,7 @@ class ThreadManager(object):
         IS_ALIVE = 0
 
 
-def start_detect():
+def start_detect(with_log=True):
+    if not with_log:
+        no_output()
     ThreadManager.start()
