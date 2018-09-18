@@ -1,7 +1,7 @@
 # whenconnect
 
 [![PyPI version](https://badge.fury.io/py/whenconnect.svg)](https://badge.fury.io/py/whenconnect)
-
+[![Downloads](https://pepy.tech/badge/whenconnect)](https://pepy.tech/project/whenconnect)
 
 > when your android connected, do sth :)
 
