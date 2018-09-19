@@ -10,14 +10,13 @@ class TaskManager(object):
         'exactly': '_register_exactly_task',
     }
 
-    # TODO 任务管理结构需要重新理一下
     # {device_id: { event_type: set([func1, func2]) }}
     # eg: { '123456F': { 'connect': set([func1, func2]), 'disconnect': set([func1, func2]) }, ...}
-    _exactly_task_dict = {}
+    _exactly_task_dict = dict()
 
     # { event_type: set([func1, func2]) }
     # { 'connect': set([func1, func2]), 'disconnect': set([func1, func2]) }
-    _any_task_dict = set()
+    _any_task_dict = dict()
 
     def __init__(self):
         raise NotImplementedError('should not init')
@@ -35,18 +34,22 @@ class TaskManager(object):
         return func_item(*args, **kwargs)
 
     @classmethod
-    def _register_any_task(cls, todo=None):
+    def _register_any_task(cls, todo=None, event_type=None):
         if not todo:
             return
-        cls._any_task_dict.add(todo)
+        if event_type not in cls._any_task_dict:
+            cls._any_task_dict[event_type] = set()
+        cls._any_task_dict[event_type].add(todo)
         logger.info('RESISTER ANY', func_name=todo.__name__)
 
     @classmethod
-    def _register_exactly_task(cls, device_list=None, todo=None):
+    def _register_exactly_task(cls, device_list=None, todo=None, event_type=None):
         for each_device in device_list:
             if each_device not in cls._exactly_task_dict:
-                cls._exactly_task_dict[each_device] = set()
-            cls._exactly_task_dict[each_device].add(todo)
+                cls._exactly_task_dict[each_device] = dict()
+            if event_type not in cls._exactly_task_dict[each_device]:
+                cls._exactly_task_dict[each_device][event_type] = set()
+            cls._exactly_task_dict[each_device][event_type].add(todo)
             logger.info('RESISTER EXACTLY', func_name=todo.__name__, device=each_device)
 
     @classmethod
@@ -55,14 +58,14 @@ class TaskManager(object):
         cls._apply_operation(operate_type, *args, **kwargs)
 
     @classmethod
-    def exec_task(cls, device_id):
+    def exec_task(cls, device_id, event_type):
         # any func
-        func_list = cls._any_task_dict.copy()
-        logger.info('ANY FUNC NEED EXEC', func_list=func_list)
+        func_list = cls._any_task_dict[event_type].copy()
+
         # exactly func
         if device_id in cls._exactly_task_dict:
-            logger.info('EXACTLY FUNC NEED EXEC', func_list=cls._exactly_task_dict[device_id])
-            func_list |= cls._exactly_task_dict[device_id]
+            _exactly_func_list = cls._exactly_task_dict[device_id][event_type]
+            func_list |= _exactly_func_list
 
         logger.info('ALL FUNC NEED EXEC', func_list=[i.__name__ for i in func_list])
         for each_func in func_list:

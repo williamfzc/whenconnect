@@ -28,24 +28,30 @@ def handle_event():
 
     :return:
     """
-    last_device_list = []
+    last_device_set = set()
     while IS_ALIVE:
-        current_device_list = event_queue.get()
+        # get device set from scanner
+        current_device_set = event_queue.get()
         event_queue.task_done()
+
         # nothing different
-        if last_device_list == current_device_list:
+        if last_device_set == current_device_set:
             continue
-        # something changed
-        diff_device_list = [i for i in current_device_list if i not in last_device_list]
+
+        # if something changed
+        add_device_set = current_device_set - last_device_set
+        lost_device_set = last_device_set - current_device_set
+
         # less device
-        if not diff_device_list:
-            last_device_list = current_device_list
-            continue
+        for each_device in lost_device_set:
+            logger.info('LOST DEVICE', device=each_device)
+            TaskManager.exec_task(each_device, 'disconnect')
         # more device
-        logger.info('DEVICE ADDED', device=diff_device_list)
-        for each_device in diff_device_list:
-            TaskManager.exec_task(each_device)
-        last_device_list = current_device_list
+        for each_device in add_device_set:
+            logger.info('ADD DEVICE', device=each_device)
+            TaskManager.exec_task(each_device, 'connect')
+
+        last_device_set = current_device_set
 
 
 class ThreadManager(object):

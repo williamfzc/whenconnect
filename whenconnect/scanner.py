@@ -35,7 +35,8 @@ def get_device_list():
         raise subprocess.CalledProcessError(adb_result, adb_devices_cmd)
 
     current_device_list = parse_process_output_to_device_list(adb_stdout_content)
-    return current_device_list
+    current_device_set = set(current_device_list)
+    return current_device_set
 
 
 # FOR TEST

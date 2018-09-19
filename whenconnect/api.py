@@ -13,12 +13,20 @@ from whenconnect.core import start_detect
 
 def when_connect(device, do):
     if isinstance(device, str):
-        return TaskManager.register_task('any', todo=do)
+        return TaskManager.register_task('any', event_type='connect', todo=do)
     if isinstance(device, Iterable):
-        return TaskManager.register_task('exactly', device_list=device, todo=do)
+        return TaskManager.register_task('exactly', event_type='connect', device_list=device, todo=do)
+
+
+def when_disconnect(device, do):
+    if isinstance(device, str):
+        return TaskManager.register_task('any', event_type='disconnect', todo=do)
+    if isinstance(device, Iterable):
+        return TaskManager.register_task('exactly', event_type='disconnect', device_list=device, todo=do)
 
 
 __all__ = [
     'when_connect',
+    'when_disconnect',
     'start_detect'
 ]

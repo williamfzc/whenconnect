@@ -87,11 +87,12 @@ See `whenconnect/api.py` for detail.
 
 ## Install
 
-Only tested on python3.
-
 ```
 pip install whenconnect
 ```
+
+- Only tested on python3.
+- and ADB installed.
 
 ## License
 
