@@ -1,5 +1,7 @@
 # whenconnect
 
+[中文版README](https://github.com/williamfzc/whenconnect/blob/master/README_zh.md)
+
 [![PyPI version](https://badge.fury.io/py/whenconnect.svg)](https://badge.fury.io/py/whenconnect)
 [![Downloads](https://pepy.tech/badge/whenconnect)](https://pepy.tech/project/whenconnect)
 
@@ -7,16 +9,16 @@
 
 ## What For
 
-提供一个简洁方便的方案以解决设备连接上电脑时的初始化工作，例如安装应用、启动应用，或是定制任何你希望的。
+A better way to handle things when connect android device, such as install an app, launch an app, and something else you wish.
 
-- 生命周期与你的程序保持一致
-- 如果你的程序结束了，监听也将不再进行
+- Have same lifecycle with your python script.
+- And when your python script end, it will end too.
 
 ## Usage
 
 ### Base
 
-如果你希望，在设备123456F成功连接电脑后执行函数A，你只需要：
+If you want to call function A when device '123456F' connected:
 
 ```python
 from whenconnect import when_connect, start_detect
@@ -26,36 +28,26 @@ def A(device):
     print('call function A', device)
 
 
-# 开始监听
+# Start when_connect detect
 start_detect()
 
-# 事件注册
+# register event
 when_connect(device=['123456F'], do=A)
 ```
 
-这样做之后，在你的程序执行时whenconnect将会同步检测123456F是否已经连接上，如果连接上，将把设备ID传入函数A并执行它：
+After that, when 123456F connected, function A will be called!
 
-```bash
-call function A 123456F
-```
-
-当然，你也可以选择响应所有设备：
+Of course, you can choose to detect 'any' devices.
 
 ```python
 when_connect(device='any', do=A)
 ```
 
-这样做之后，一旦新增了android设备都会执行函数A。
-
 ### More
 
-如果你只是单纯希望它单独作为一个长期的监听模块存在，只需要让你的程序保持工作即可：
+Use dead loop or server to keep when_connect alive for a long time if you want.
 
-- 在末尾加入死循环
-- 嵌入到服务器
-- `...`
-
-基于whenconnect，你可以自由定制你需要的场景。例如，希望在设备插入后每五秒钟查看一次设备信息：
+For example, after device connected, check its device info every 5 seconds：
 
 ```python
 from whenconnect import when_connect, start_detect
@@ -73,13 +65,15 @@ def check_device_info(device):
     timer.start()
 
 
-# 开始监听
 start_detect()
 
-# 事件注册
 when_connect(device='any', do=check_device_info)
 
+while True:
+    pass
 ```
+
+Can not become easier.
 
 ## API
 
