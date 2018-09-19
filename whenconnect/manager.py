@@ -10,11 +10,14 @@ class TaskManager(object):
         'exactly': '_register_exactly_task',
     }
 
-    # {device_id: set([func1, func2]),}
+    # TODO 任务管理结构需要重新理一下
+    # {device_id: { event_type: set([func1, func2]) }}
+    # eg: { '123456F': { 'connect': set([func1, func2]), 'disconnect': set([func1, func2]) }, ...}
     _exactly_task_dict = {}
 
-    # set([func1, func2])
-    _any_task_list = set()
+    # { event_type: set([func1, func2]) }
+    # { 'connect': set([func1, func2]), 'disconnect': set([func1, func2]) }
+    _any_task_dict = set()
 
     def __init__(self):
         raise NotImplementedError('should not init')
@@ -35,7 +38,7 @@ class TaskManager(object):
     def _register_any_task(cls, todo=None):
         if not todo:
             return
-        cls._any_task_list.add(todo)
+        cls._any_task_dict.add(todo)
         logger.info('RESISTER ANY', func_name=todo.__name__)
 
     @classmethod
@@ -54,7 +57,7 @@ class TaskManager(object):
     @classmethod
     def exec_task(cls, device_id):
         # any func
-        func_list = cls._any_task_list.copy()
+        func_list = cls._any_task_dict.copy()
         logger.info('ANY FUNC NEED EXEC', func_list=func_list)
         # exactly func
         if device_id in cls._exactly_task_dict:
