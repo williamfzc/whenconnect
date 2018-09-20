@@ -16,7 +16,10 @@ class TaskManager(object):
 
     # { event_type: set([func1, func2]) }
     # { 'connect': set([func1, func2]), 'disconnect': set([func1, func2]) }
-    _any_task_dict = dict()
+    _any_task_dict = {
+        'connect': set(),
+        'disconnect': set(),
+    }
 
     def __init__(self):
         raise NotImplementedError('should not init')

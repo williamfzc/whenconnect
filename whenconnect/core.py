@@ -62,8 +62,9 @@ class ThreadManager(object):
     def start(cls):
         global IS_ALIVE
         IS_ALIVE = 1
-        cls.loop_device_thread.start()
-        cls.event_handler_thread.start()
+        [i.start()
+         for i in (cls.loop_device_thread, cls.event_handler_thread)
+         if not i.is_alive()]
 
     @classmethod
     def stop(cls):
