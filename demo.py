@@ -15,7 +15,7 @@ def lose_connect(device):
 
 # init when_connect
 # if no need for log, you can set 'with_log' to False. Default to True.
-start_detect()
+start_detect(with_log=False)
 
 # set device list
 when_connect(device=['123', 'def456'], do=special_thing)

@@ -6,23 +6,23 @@
 - core将初始化pipe初始化用于数据传递，并在子线程中启动scanner用于监听设备，并将三者互相绑定
 """
 
-from collections import Iterable
 from whenconnect.manager import TaskManager
 from whenconnect.core import start_detect
 
 
-def when_connect(device, do):
+def _get_task_type(device):
     if isinstance(device, str):
-        return TaskManager.register_task('any', event_type='connect', todo=do)
-    if isinstance(device, Iterable):
-        return TaskManager.register_task('exactly', event_type='connect', device_list=device, todo=do)
+        return 'any'
+    if isinstance(device, list):
+        return 'specific'
+
+
+def when_connect(device, do):
+    return TaskManager.register_task(_get_task_type(device), event_type='connect', device_list=device, todo=do)
 
 
 def when_disconnect(device, do):
-    if isinstance(device, str):
-        return TaskManager.register_task('any', event_type='disconnect', todo=do)
-    if isinstance(device, Iterable):
-        return TaskManager.register_task('exactly', event_type='disconnect', device_list=device, todo=do)
+    return TaskManager.register_task(_get_task_type(device), event_type='disconnect', device_list=device, todo=do)
 
 
 __all__ = [
