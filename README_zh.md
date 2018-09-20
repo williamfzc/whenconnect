@@ -2,6 +2,7 @@
 
 [English README](https://github.com/williamfzc/whenconnect/blob/master/README.md)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/c6e406c3416bbbcbd898/maintainability)](https://codeclimate.com/github/williamfzc/whenconnect/maintainability)
 [![PyPI version](https://badge.fury.io/py/whenconnect.svg)](https://badge.fury.io/py/whenconnect)
 [![Downloads](https://pepy.tech/badge/whenconnect)](https://pepy.tech/project/whenconnect)
 
