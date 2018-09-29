@@ -10,7 +10,7 @@
 
 ## What For
 
-提供一个简洁方便的方案以解决设备连接上电脑时的初始化工作，例如安装应用、启动应用，或是定制任何你希望的。
+提供一个简洁方便的方案以解决设备连接与断开时的监听工作，例如安装应用、启动应用、杀死进程，或是定制任何你希望的。
 
 - 生命周期与你的程序保持一致
 - 如果你的程序结束了，监听也将不再进行
@@ -34,6 +34,10 @@ start_detect()
 
 # 事件注册
 when_connect(device=['123456F'], do=A)
+
+# 你的其他逻辑
+while True:
+    pass
 ```
 
 这样做之后，在你的程序执行时whenconnect将会同步检测123456F是否已经连接上，如果连接上，将把设备ID传入函数A并执行它：
@@ -48,7 +52,7 @@ call function A 123456F
 when_connect(device='any', do=A)
 ```
 
-这样做之后，一旦新增了android设备都会执行函数A。
+这样做之后，一旦新增了android设备都会执行函数A并传入连接上的设备id。
 
 ### More
 
@@ -82,6 +86,8 @@ start_detect()
 # 事件注册
 when_connect(device='any', do=check_device_info)
 
+while True:
+    pass
 ```
 
 ## API
