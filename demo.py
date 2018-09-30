@@ -1,4 +1,4 @@
-from whenconnect import when_connect, when_disconnect, start_detect
+from whenconnect import *
 
 
 def special_thing(device):
@@ -25,6 +25,10 @@ when_connect(device='any', do=normal_thing)
 
 # of course, when disconnect:
 when_disconnect(device='any', do=lose_connect)
+
+# or, get connected devices list anytime
+device_list = get_devices()
+print(device_list)
 
 # CARE ONLY WHAT U REALLY NEED
 while True:
