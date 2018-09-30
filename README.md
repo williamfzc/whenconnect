@@ -44,6 +44,21 @@ Of course, you can choose to detect 'any' devices.
 when_connect(device='any', do=A)
 ```
 
+Or, get connected devices list or registered tasks anytime:
+
+```python
+from whenconnect import get_devices, get_current_task
+
+
+device_list = get_devices()
+print(device_list)
+# ['123456F']
+
+task_dict = get_current_task()
+print(task_dict)
+# {'any': {'connect': {<function normal_thing at 0x1033dad08>}, 'disconnect': {<function lose_connect at 0x1068d5b70>}}, 'specific': {'123': {'connect': {<function special_thing at 0x101dc8ea0>}}, 'def456': {'connect': {<function special_thing at 0x101dc8ea0>}}}}
+```
+
 ### More
 
 Use dead loop or server to keep when_connect alive for a long time if you want.

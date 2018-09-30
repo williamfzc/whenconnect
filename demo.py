@@ -30,6 +30,10 @@ when_disconnect(device='any', do=lose_connect)
 device_list = get_devices()
 print(device_list)
 
+# check registered tasks
+task_dict = get_current_task()
+print(task_dict)
+
 # CARE ONLY WHAT U REALLY NEED
 while True:
     pass

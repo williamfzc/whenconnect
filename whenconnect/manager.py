@@ -71,3 +71,10 @@ class TaskManager(object):
         for each_func in func_list:
             logger.info('EXEC FUNC', func=each_func.__name__, device=device_id)
             each_func(device_id)
+
+    @classmethod
+    def get_task_dict(cls):
+        return {
+            'any': cls._any_task_dict,
+            'specific': cls._specific_task_dict,
+        }

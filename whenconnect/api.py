@@ -30,9 +30,22 @@ def get_devices():
     return list(get_device_list())
 
 
+def get_current_task(task_type=None):
+    current_task_dict = TaskManager.get_task_dict()
+    if task_type and task_type in current_task_dict:
+        return current_task_dict[task_type]
+    return current_task_dict
+
+
 __all__ = [
+    # register
     'when_connect',
     'when_disconnect',
+
+    # func
     'start_detect',
+
+    # get info
     'get_devices',
+    'get_current_task',
 ]

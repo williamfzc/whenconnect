@@ -54,6 +54,21 @@ when_connect(device='any', do=A)
 
 这样做之后，一旦新增了android设备都会执行函数A并传入连接上的设备id。
 
+whenconnect也提供了API以便在程序任意位置获取到当前的设备与任务注册状态：
+
+```python
+from whenconnect import get_devices, get_current_task
+
+
+device_list = get_devices()
+print(device_list)
+# ['123456F']
+
+task_dict = get_current_task()
+print(task_dict)
+# {'any': {'connect': {<function normal_thing at 0x1033dad08>}, 'disconnect': {<function lose_connect at 0x1068d5b70>}}, 'specific': {'123': {'connect': {<function special_thing at 0x101dc8ea0>}}, 'def456': {'connect': {<function special_thing at 0x101dc8ea0>}}}}
+```
+
 ### More
 
 如果你只是单纯希望它单独作为一个长期的监听模块存在，只需要让你的程序保持工作即可：
