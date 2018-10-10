@@ -9,6 +9,7 @@
 from whenconnect.manager import TaskManager
 from whenconnect.core import start_detect
 from whenconnect.scanner import get_device_list
+from whenconnect.device import WCDevice
 
 
 def _get_task_type(device):
@@ -27,7 +28,8 @@ def when_disconnect(device, do):
 
 
 def get_devices():
-    return list(get_device_list())
+    result_list = [WCDevice(each) for each in get_device_list()]
+    return result_list
 
 
 def get_current_task(task_type=None):
