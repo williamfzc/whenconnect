@@ -2,6 +2,8 @@ import subprocess
 import warnings
 import os
 
+from whenconnect.utils import exec_cmd
+
 
 def parse_process_output_to_device_list(process_output: str) -> list:
     """
@@ -25,10 +27,7 @@ def get_device_list():
     :return: ['abcdef', 'ghijkl']
     """
     adb_devices_cmd = ['adb', 'devices']
-    adb_process = subprocess.Popen(adb_devices_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    adb_result = adb_process.wait(timeout=30)
-    adb_stdout_content = adb_process.stdout.read().decode()
-    adb_stderr_content = adb_process.stderr.read().decode()
+    adb_result, adb_stdout_content, adb_stderr_content = exec_cmd(adb_devices_cmd)
     if adb_result:
         error_msg = '\n'.join((adb_stdout_content, adb_stderr_content))
         warnings.warn('adb devices error: {}'.format(error_msg))
