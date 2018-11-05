@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='whenconnect',
-    version='0.4.0',
+    version='0.4.1',
     description='when your android connected, do sth :) visit github page to view detail',
     author='williamfzc',
     author_email='fengzc@vip.qq.com',
@@ -11,5 +11,6 @@ setup(
     packages=find_packages(),
     install_requires=[
         'structlog',
+        'pyatool'
     ]
 )
