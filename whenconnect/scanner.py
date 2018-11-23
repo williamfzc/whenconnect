@@ -1,48 +1,35 @@
-import subprocess
-import warnings
-import os
-
-from whenconnect.utils import exec_cmd
+import ConnectionTracer
+from whenconnect.logger import logger
+from whenconnect.manager import TaskManager
 
 
-def parse_process_output_to_device_list(process_output: str) -> list:
-    """
-    return available device list
+class DeviceManager(object):
+    _devices = set()
 
-    :param process_output: output of subprocess, after decode
-    :return: ['abcdef', 'ghijkl']
-    """
-    device_list = [i.split('\t') for i in process_output.split(os.linesep)[1:] if i]
-    available_device_list = []
-    for each_device in device_list:
-        if 'device' in each_device:
-            available_device_list.append(each_device[0])
-    return available_device_list
+    @classmethod
+    def get_devices(cls):
+        return cls._devices
 
+    @classmethod
+    def set_devices(cls, current_devices):
+        add_device_set = current_devices - cls._devices
+        lost_device_set = cls._devices - current_devices
 
-def get_device_list():
-    """
-    use adb to get available device list
+        # remove device
+        for each_device in lost_device_set:
+            logger.info('LOST DEVICE', device=each_device)
+            TaskManager.exec_task(each_device, 'disconnect')
 
-    :return: ['abcdef', 'ghijkl']
-    """
-    adb_devices_cmd = ['adb', 'devices']
-    adb_result, adb_stdout_content, adb_stderr_content = exec_cmd(adb_devices_cmd)
-    if adb_result:
-        error_msg = '\n'.join((adb_stdout_content, adb_stderr_content))
-        warnings.warn('adb devices error: {}'.format(error_msg))
-        raise subprocess.CalledProcessError(adb_result, adb_devices_cmd)
+        # add device
+        for each_device in add_device_set:
+            logger.info('ADD DEVICE', device=each_device)
+            TaskManager.exec_task(each_device, 'connect')
 
-    current_device_list = parse_process_output_to_device_list(adb_stdout_content)
-    current_device_set = set(current_device_list)
-    return current_device_set
+        cls._devices = current_devices
 
 
-# FOR TEST
-def _test():
-    current_device_list = get_device_list()
-    print(current_device_list)
+def update_current_devices(devices):
+    DeviceManager.set_devices(devices)
 
 
-if __name__ == '__main__':
-    _test()
+ConnectionTracer.start(update_current_devices)

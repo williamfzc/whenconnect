@@ -7,9 +7,7 @@
 """
 
 from whenconnect.manager import TaskManager
-from whenconnect.core import start_detect
-from whenconnect.scanner import get_device_list
-from whenconnect.device import WCDevice
+from whenconnect.scanner import DeviceManager
 
 
 def _get_task_type(device):
@@ -28,8 +26,7 @@ def when_disconnect(device, do):
 
 
 def get_devices():
-    result_list = [WCDevice(each) for each in get_device_list()]
-    return result_list
+    return DeviceManager.get_devices()
 
 
 def get_current_task(task_type=None):
@@ -43,9 +40,6 @@ __all__ = [
     # register
     'when_connect',
     'when_disconnect',
-
-    # func
-    'start_detect',
 
     # get info
     'get_devices',

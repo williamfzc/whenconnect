@@ -1,30 +1,26 @@
 from whenconnect import *
 
 
-def special_thing(device):
-    print('do something special!', device)
-
-
-def normal_thing(device):
-    print('do something normal.', device)
+def start_connect(device):
+    print('{} connected'.format(device))
 
 
 def lose_connect(device):
-    print('{} lost!'.format(device))
+    print('{} lost'.format(device))
 
 
-# init when_connect
-# if no need for log, you can set 'with_log' to False. Default to True.
-start_detect(with_log=False)
+def special_connect(device):
+    print('{} specially connected'.format(device))
 
-# set device list
-when_connect(device=['123', 'def456'], do=special_thing)
 
 # or command mode
-when_connect(device='any', do=normal_thing)
+when_connect(device='any', do=start_connect)
 
 # of course, when disconnect:
 when_disconnect(device='any', do=lose_connect)
+
+# specify a device
+when_connect(device=['9c12aa96'], do=special_connect)
 
 # or, get connected devices list anytime
 device_list = get_devices()
@@ -33,7 +29,3 @@ print(device_list)
 # check registered tasks
 task_dict = get_current_task()
 print(task_dict)
-
-# CARE ONLY WHAT U REALLY NEED
-while True:
-    pass

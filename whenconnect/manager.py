@@ -42,7 +42,10 @@ class TaskManager(object):
     def _register_specific_task(cls, device_list, todo, event_type):
         for each_device in device_list:
             if each_device not in cls._specific_task_dict:
-                cls._specific_task_dict[each_device] = dict()
+                cls._specific_task_dict[each_device] = {
+                    'connect': set(),
+                    'disconnect': set(),
+                }
             if event_type not in cls._specific_task_dict[each_device]:
                 cls._specific_task_dict[each_device][event_type] = set()
             cls._specific_task_dict[each_device][event_type].add(todo)
@@ -50,8 +53,6 @@ class TaskManager(object):
 
     @classmethod
     def register_task(cls, operate_type, event_type, todo, device_list=None):
-        logger.info('START REGISTER', type=operate_type)
-
         if operate_type in cls._operation_dict:
             operate_type = cls._operation_dict[operate_type]
         func_item = getattr(cls, operate_type, cls._default_operation)
