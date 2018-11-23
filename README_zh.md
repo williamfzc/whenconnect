@@ -22,15 +22,11 @@
 如果你希望，在设备123456F成功连接电脑后执行函数A，你只需要：
 
 ```python
-from whenconnect import when_connect, start_detect
+from whenconnect import when_connect
 
 
 def A(device):
     print('call function A', device)
-
-
-# 开始监听
-start_detect()
 
 # 事件注册
 when_connect(device=['123456F'], do=A)
@@ -80,7 +76,7 @@ print(task_dict)
 基于whenconnect，你可以自由定制你需要的场景。例如，希望在设备插入后每五秒钟查看一次设备信息：
 
 ```python
-from whenconnect import when_connect, start_detect
+from whenconnect import when_connect
 import os
 import threading
 
@@ -94,15 +90,8 @@ def check_device_info(device):
     timer = threading.Timer(5, lambda: check_device_info(device))
     timer.start()
 
-
-# 开始监听
-start_detect()
-
 # 事件注册
 when_connect(device='any', do=check_device_info)
-
-while True:
-    pass
 ```
 
 ## API

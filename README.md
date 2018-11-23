@@ -22,15 +22,11 @@ A better way to handle things when connect android device, such as install an ap
 If you want to call function A when device '123456F' connected:
 
 ```python
-from whenconnect import when_connect, start_detect
+from whenconnect import when_connect
 
 
 def A(device):
     print('call function A', device)
-
-
-# Start when_connect detect
-start_detect()
 
 # register event
 when_connect(device=['123456F'], do=A)
@@ -66,7 +62,7 @@ Use dead loop or server to keep when_connect alive for a long time if you want.
 For example, after device connected, check its device info every 5 seconds：
 
 ```python
-from whenconnect import when_connect, start_detect
+from whenconnect import when_connect
 import os
 import threading
 
@@ -80,13 +76,7 @@ def check_device_info(device):
     timer = threading.Timer(5, lambda: check_device_info(device))
     timer.start()
 
-
-start_detect()
-
 when_connect(device='any', do=check_device_info)
-
-while True:
-    pass
 ```
 
 Can not become easier.
