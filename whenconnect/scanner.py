@@ -1,6 +1,8 @@
 import ConnectionTracer
+import functools
 from whenconnect.logger import logger
 from whenconnect.manager import TaskManager
+from whenconnect import config
 
 
 class DeviceManager(object):
@@ -34,8 +36,19 @@ def update_current_devices(devices):
 
 def change_adb_port(new_port):
     ConnectionTracer.stop()
-    ConnectionTracer.config = new_port
-    ConnectionTracer.start(update_current_devices)
+    ConnectionTracer.start(update_current_devices, port=new_port)
 
 
-ConnectionTracer.start(update_current_devices)
+def api_wrapper(func):
+    """ before API call, check connection first """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        check_scanner()
+        return func(*args, **kwargs)
+    return wrapper
+
+
+def check_scanner():
+    """ check connection, and start it if it did not start """
+    if not ConnectionTracer.get_status():
+        ConnectionTracer.start(update_current_devices, port=config.ADB_PORT)

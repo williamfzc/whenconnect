@@ -7,7 +7,7 @@
 """
 
 from whenconnect.manager import TaskManager
-from whenconnect.scanner import DeviceManager
+from whenconnect.scanner import DeviceManager, api_wrapper
 
 
 def _get_task_type(device):
@@ -17,18 +17,22 @@ def _get_task_type(device):
         return 'specific'
 
 
+@api_wrapper
 def when_connect(device, do):
     return TaskManager.register_task(_get_task_type(device), event_type='connect', device_list=device, todo=do)
 
 
+@api_wrapper
 def when_disconnect(device, do):
     return TaskManager.register_task(_get_task_type(device), event_type='disconnect', device_list=device, todo=do)
 
 
+@api_wrapper
 def get_devices():
     return DeviceManager.get_devices()
 
 
+@api_wrapper
 def get_current_task(task_type=None):
     current_task_dict = TaskManager.get_task_dict()
     if task_type and task_type in current_task_dict:
