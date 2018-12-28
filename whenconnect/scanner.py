@@ -32,4 +32,10 @@ def update_current_devices(devices):
     DeviceManager.set_devices(devices)
 
 
+def change_adb_port(new_port):
+    ConnectionTracer.stop()
+    ConnectionTracer.config = new_port
+    ConnectionTracer.start(update_current_devices)
+
+
 ConnectionTracer.start(update_current_devices)
