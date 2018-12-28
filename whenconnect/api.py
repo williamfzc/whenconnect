@@ -5,6 +5,7 @@
     - 返回
 - core将初始化pipe初始化用于数据传递，并在子线程中启动scanner用于监听设备，并将三者互相绑定
 """
+import time
 
 from whenconnect.manager import TaskManager
 from whenconnect.scanner import DeviceManager, api_wrapper
@@ -29,11 +30,13 @@ def when_disconnect(device, do):
 
 @api_wrapper
 def get_devices():
+    time.sleep(0.1)
     return DeviceManager.get_devices()
 
 
 @api_wrapper
 def get_current_task(task_type=None):
+    time.sleep(0.1)
     current_task_dict = TaskManager.get_task_dict()
     if task_type and task_type in current_task_dict:
         return current_task_dict[task_type]
