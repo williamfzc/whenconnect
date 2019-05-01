@@ -15,6 +15,8 @@ A better way to handle things when connect android device, such as install an ap
 - Have same lifecycle with your python script.
 - And when your python script end, it will end too.
 
+> If you are using Linux, you might love [ud4d](https://github.com/doringland/ud4d) much more :)
+
 ## Usage
 
 ### Base
