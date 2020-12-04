@@ -30,7 +30,8 @@ def when_disconnect(device, do):
 
 @api_wrapper
 def get_devices():
-    time.sleep(0.1)
+    while DeviceManager.updating():
+        time.sleep(0.1)
     return DeviceManager.get_devices()
 
 
