@@ -3,10 +3,12 @@ from whenconnect import *
 
 def start_connect(device):
     print('{} connected'.format(device))
+    print('all devices: {}'.format(get_devices()))
 
 
 def lose_connect(device):
     print('{} lost'.format(device))
+    print('all devices: {}'.format(get_devices()))
 
 
 def special_connect(device):
